@@ -1,0 +1,20 @@
+{
+    "name": "lyssal/entity",
+    "description": "Some functionalities to use and manage entities.",
+	"license" : "proprietary",
+    "keywords": ["entity"],
+    "type": "library",
+    "authors": [
+        {
+            "name": "Rémi Leclerc",
+            "homepage": "http://www.lyssal.com/"
+        }
+    ],
+    "require": {},
+    "suggest": {
+    	"lyssal/entity-bundle": "To use this library with Symfony."
+    },
+    "autoload":     {
+        "psr-0": { "Lyssal\\Entity": "src" }
+    }
+}
