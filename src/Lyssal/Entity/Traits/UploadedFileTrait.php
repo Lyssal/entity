@@ -75,7 +75,7 @@ trait UploadedFileTrait
     /**
      * Upload the file.
      */
-    protected function uploadFile()
+    public function uploadFile()
     {
         // Your logic here
     }
