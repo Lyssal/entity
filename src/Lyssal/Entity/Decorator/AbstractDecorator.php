@@ -37,9 +37,7 @@ abstract class AbstractDecorator implements DecoratorInterface
 
 
     /**
-     * Set the entity of the decorator.
-     *
-     * @param object $entity The entity
+     * @see \Lyssal\Entity\Decorator\DecoratorInterface::setEntity()
      */
     public function setEntity($entity)
     {
@@ -47,9 +45,7 @@ abstract class AbstractDecorator implements DecoratorInterface
     }
 
     /**
-     * Get the entity of the decorator.
-     *
-     * @return object The entity
+     * @see \Lyssal\Entity\Decorator\DecoratorInterface::getEntity()
      */
     public function getEntity()
     {

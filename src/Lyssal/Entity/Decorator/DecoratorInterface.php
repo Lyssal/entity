@@ -20,4 +20,18 @@ interface DecoratorInterface
      * @return bool If the entity is supported
      */
     public function supports($entity);
+
+    /**
+     * Set the entity of the decorator.
+     *
+     * @param object $entity The entity
+     */
+    public function setEntity($entity);
+
+    /**
+     * Get the entity of the decorator.
+     *
+     * @return object The entity
+     */
+    public function getEntity();
 }
