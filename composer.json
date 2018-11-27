@@ -1,7 +1,7 @@
 {
     "name": "lyssal/entity",
     "description": "Some functionalities to use and manage entities.",
-	"license" : "proprietary",
+	"license" : "MIT",
     "keywords": ["entity"],
     "type": "library",
     "authors": [
