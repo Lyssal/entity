@@ -22,6 +22,15 @@ class AppellationManager
 
 
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+
+    }
+
+
+    /**
      * Add an appellation handler.
      *
      * @param \Lyssal\Entity\Appellation\AppellationInterface $appellationHandler The appellation handler
