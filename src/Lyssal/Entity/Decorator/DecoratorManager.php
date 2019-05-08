@@ -7,7 +7,6 @@
  */
 namespace Lyssal\Entity\Decorator;
 
-use Lyssal\CollectionBundle\Entity\Support;
 use Lyssal\Entity\Decorator\Exception\DecoratorException;
 use Traversable;
 
