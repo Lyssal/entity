@@ -75,4 +75,14 @@ abstract class AbstractDecorator implements DecoratorInterface
 
         return $value;
     }
+
+    /**
+     * Get the entity string.
+     *
+     * @return string The string
+     */
+    public function __toString()
+    {
+        return (string) $this->entity;
+    }
 }
