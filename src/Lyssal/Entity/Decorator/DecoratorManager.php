@@ -7,6 +7,7 @@
  */
 namespace Lyssal\Entity\Decorator;
 
+use ArrayAccess;
 use Lyssal\Entity\Decorator\Exception\DecoratorException;
 use Traversable;
 
@@ -69,12 +70,12 @@ class DecoratorManager
      */
     public function get($oneOrManyEntities)
     {
-        if (is_array($oneOrManyEntities) || $oneOrManyEntities instanceof Traversable) {
-            $decorators = array();
-            foreach ($oneOrManyEntities as $entity) {
-                $decorators[] = $this->get($entity);
-            }
-            return $decorators;
+        if (
+            is_array($oneOrManyEntities)
+            || $oneOrManyEntities instanceof ArrayAccess
+            || $oneOrManyEntities instanceof Traversable
+        ) {
+            return $this->getArray($oneOrManyEntities);
         }
 
         foreach ($this->decoratorHandlers as $decoratorHandler) {
@@ -89,6 +90,41 @@ class DecoratorManager
         if (!is_object($oneOrManyEntities)) {
             throw new DecoratorException('The value for the decorator is not an object (type "'.gettype($oneOrManyEntities).'" found).');
         }
+
         throw new DecoratorException('The entity decorator handler has not been called for "'.get_class($oneOrManyEntities).'".');
+    }
+
+    /**
+     * Get the decorators of the entities.
+     *
+     * @see \Lyssal\Entity\Decorator\DecoratorManager::get()
+     *
+     * @param array|\ArrayAccess|\Traversable $entities The entities
+     *
+     * @throws \Lyssal\Entity\Decorator\Exception\DecoratorException If the parameter is not managed
+     */
+    protected function getArray($entities)
+    {
+        if (is_array($entities) || $entities instanceof ArrayAccess) {
+            $decorators = [];
+
+            foreach ($entities as $i => $entity) {
+                $decorators[$i] = $this->get($entity);
+            }
+
+            return $decorators;
+        }
+
+        if ($entities instanceof Traversable) {
+            $decorators = [];
+
+            foreach ($entities as $i => $entity) {
+                $decorators[] = $this->get($entity);
+            }
+
+            return $decorators;
+        }
+
+        throw new DecoratorException('The entities parameter is not a managed array or traversable.');
     }
 }
