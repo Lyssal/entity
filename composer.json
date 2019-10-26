@@ -14,7 +14,9 @@
     "suggest": {
     	"lyssal/entity-bundle": "To use this library with Symfony."
     },
-    "autoload":     {
-        "psr-0": { "Lyssal\\Entity": "src" }
+    "autoload": {
+        "psr-4": {
+            "Lyssal\\Entity\\": "src/"
+        }
     }
 }
