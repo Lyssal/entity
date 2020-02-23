@@ -17,19 +17,31 @@ use Traversable;
 class DecoratorManager
 {
     /**
-     * @var \Lyssal\Entity\Decorator\DecoratorInterface[] The decorator handlers
+     * @var \Lyssal\Entity\Decorator\DecoratorInterface[] The decorators
      */
-    protected $decoratorHandlers = array();
+    protected $decorators = array();
 
+    
+    /**
+     * Add decorators.
+     *
+     * @param \Lyssal\Entity\Decorator\DecoratorInterface[] $decorators The decorators
+     */
+    public function addDecorators(Traversable $decorators): void
+    {
+        foreach ($decorators as $decorator) {
+            $this->addDecorator($decorator);
+        }
+    }
 
     /**
-     * Add a decorator handler.
+     * Add a decorator.
      *
-     * @param \Lyssal\Entity\Decorator\DecoratorInterface $decoratorHandler The decorator handler
+     * @param \Lyssal\Entity\Decorator\DecoratorInterface $decorator The decorator
      */
-    public function addDecoratorHandler(DecoratorInterface $decoratorHandler)
+    public function addDecorator(DecoratorInterface $decorator)
     {
-        $this->decoratorHandlers[] = $decoratorHandler;
+        $this->decorators[] = $decorator;
     }
 
     /**
@@ -51,8 +63,8 @@ class DecoratorManager
             return $atLeastOneEntity;
         }
 
-        foreach ($this->decoratorHandlers as $decoratorHandler) {
-            if ($decoratorHandler->supports($oneOrManyEntities)) {
+        foreach ($this->decorators as $decorator) {
+            if ($decorator->supports($oneOrManyEntities)) {
                 return true;
             }
         }
@@ -66,7 +78,7 @@ class DecoratorManager
      * @param object|object[] $oneOrManyEntities One or many entities
      * @return \Lyssal\Entity\Decorator\DecoratorInterface|\Lyssal\Entity\Decorator\DecoratorInterface[] The decorator(s)
      * @throws \Lyssal\Entity\Decorator\Exception\DecoratorException If the entity is not an object
-     * @throws \Lyssal\Entity\Decorator\Exception\DecoratorException If the decorator handler has not been called
+     * @throws \Lyssal\Entity\Decorator\Exception\DecoratorException If the decorator has not been called
      */
     public function get($oneOrManyEntities)
     {
@@ -78,10 +90,10 @@ class DecoratorManager
             return $this->getArray($oneOrManyEntities);
         }
 
-        foreach ($this->decoratorHandlers as $decoratorHandler) {
-            if ($decoratorHandler->supports($oneOrManyEntities)) {
+        foreach ($this->decorators as $decorator) {
+            if ($decorator->supports($oneOrManyEntities)) {
                 // Clone to avoid references and return the same objects
-                $decoratorClone = clone $decoratorHandler;
+                $decoratorClone = clone $decorator;
                 $decoratorClone->setEntity($oneOrManyEntities);
                 return $decoratorClone;
             }
@@ -91,7 +103,7 @@ class DecoratorManager
             throw new DecoratorException('The value for the decorator is not an object (type "'.gettype($oneOrManyEntities).'" found).');
         }
 
-        throw new DecoratorException('The entity decorator handler has not been called for "'.get_class($oneOrManyEntities).'".');
+        throw new DecoratorException('The entity decorator has not been called for "'.get_class($oneOrManyEntities).'".');
     }
 
     /**

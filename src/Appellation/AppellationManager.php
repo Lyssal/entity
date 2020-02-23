@@ -9,6 +9,7 @@ namespace Lyssal\Entity\Appellation;
 
 use Lyssal\Entity\Decorator\DecoratorInterface;
 use Lyssal\Entity\Appellation\Exception\AppellationException;
+use Traversable;
 
 /**
  * the appellations' manager.
@@ -16,28 +17,31 @@ use Lyssal\Entity\Appellation\Exception\AppellationException;
 class AppellationManager
 {
     /**
-     * @var \Lyssal\Entity\Appellation\AppellationInterface[] The appellation handlers
+     * @var \Lyssal\Entity\Appellation\AppellationInterface[] The appellations
      */
-    protected $appellationHandlers = array();
+    protected $appellations = array();
 
 
     /**
-     * Constructor.
+     * Add appellations.
+     *
+     * @param \Lyssal\Entity\Appellation\AppellationInterface[] $appellations The appellations
      */
-    public function __construct()
+    public function addAppellations(Traversable $appelations): void
     {
-
+        foreach ($appelations as $appelation) {
+            $this->addAppellation($appelation);
+        }
     }
 
-
     /**
-     * Add an appellation handler.
+     * Add an appellation.
      *
-     * @param \Lyssal\Entity\Appellation\AppellationInterface $appellationHandler The appellation handler
+     * @param \Lyssal\Entity\Appellation\AppellationInterface $appellation The appellation
      */
-    public function addAppellationHandler(AppellationInterface $appellationHandler)
+    public function addAppellation(AppellationInterface $appellation)
     {
-        $this->appellationHandlers[] = $appellationHandler;
+        $this->appellations[] = $appellation;
     }
 
     /**
@@ -46,13 +50,13 @@ class AppellationManager
      * @param object $object The object
      * @return string The appellation
      * @throws \Lyssal\Entity\Appellation\Exception\AppellationException If the parameter is not an object
-     * @throws \Lyssal\Entity\Appellation\Exception\AppellationException If the object has not a __toString method and if the appellation handler has not been called
+     * @throws \Lyssal\Entity\Appellation\Exception\AppellationException If the object has not a __toString method and if the appellation has not been called
      */
     public function appellation($object)
     {
-        foreach ($this->appellationHandlers as $appellationHandler) {
-            if ($appellationHandler->supports($object)) {
-                return $appellationHandler->appellation($object);
+        foreach ($this->appellations as $appellation) {
+            if ($appellation->supports($object)) {
+                return $appellation->appellation($object);
             }
         }
 
@@ -68,12 +72,12 @@ class AppellationManager
             try {
                 return $this->appellation($object->getEntity());
             } catch (AppellationException $e) {
-                throw new AppellationException('The appellation handler has not been called for "'.get_class($object).'" and the class has not a __toString method.');
+                throw new AppellationException('The appellation has not been called for "'.get_class($object).'" and the class has not a __toString method.');
             }
 
         }
 
-        throw new AppellationException('The appellation handler has not been called for "'.get_class($object).'" and the class has not a __toString method.');
+        throw new AppellationException('The appellation has not been called for "'.get_class($object).'" and the class has not a __toString method.');
     }
 
     /**
@@ -85,9 +89,9 @@ class AppellationManager
      */
     public function appellationHtml($object)
     {
-        foreach ($this->appellationHandlers as $appellationHandler) {
-            if ($appellationHandler->supports($object)) {
-                return $appellationHandler->appellationHtml($object);
+        foreach ($this->appellations as $appellation) {
+            if ($appellation->supports($object)) {
+                return $appellation->appellationHtml($object);
             }
         }
 
