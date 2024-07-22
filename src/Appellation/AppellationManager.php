@@ -54,10 +54,10 @@ class AppellationManager
      */
     public function appellation($object)
     {
-        foreach ($this->appellations as $appellation) {
-            if ($appellation->supports($object)) {
-                return $appellation->appellation($object);
-            }
+        $appellationService = $this->getAppellationService($object);
+
+        if (null !== $appellationService) {
+            return $appellationService->appellation($object);
         }
 
         if (!is_object($object)) {
@@ -89,12 +89,30 @@ class AppellationManager
      */
     public function appellationHtml($object)
     {
-        foreach ($this->appellations as $appellation) {
-            if ($appellation->supports($object)) {
-                return $appellation->appellationHtml($object);
-            }
+        $appellationService = $this->getAppellationService($object);
+
+        if (null !== $appellationService) {
+            return $appellationService->appellationHtml($object);
         }
 
         return $this->appellation($object);
+    }
+
+    /**
+     * Get the appellation service of the object.
+     *
+     * @param object $object The object
+     *
+     * @return AppellationInterface The appellation service
+     */
+    protected function getAppellationService($object): ?AppellationInterface
+    {
+        foreach ($this->appellations as $appellation) {
+            if ($appellation->supports($object)) {
+                return $appellation;
+            }
+        }
+
+        return null;
     }
 }
